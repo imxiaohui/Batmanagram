@@ -248,15 +248,15 @@ public final class AnagramEditorTopComponent extends TopComponent {
         if (wordLibrary.isCorrect(wordIdx, guessedWord.getText())){
             feedbackLabel.setText("Correct! Try a new word!");
             getRootPane().setDefaultButton(nextTrial);
+            
+            // enable save capability
+            ic.add(gwsc);
         } else {
             feedbackLabel.setText("Incorrect! Try again!");
             guessedWord.setText("");
         }
 
         guessedWord.requestFocusInWindow();
-        
-        // enable save capability
-        ic.add(gwsc);
     }//GEN-LAST:event_guessButtonguessedWordActionPerformed
 
     private void nextTrialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextTrialActionPerformed
