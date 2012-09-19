@@ -14,6 +14,7 @@ import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
+import org.openide.windows.WindowManager;
 import sun.java2d.pipe.LoopBasedPipe;
 
 /**
@@ -88,7 +89,11 @@ public final class HistoryTopComponent extends TopComponent implements LookupLis
     
     @Override
     public void componentOpened() {
+        // register to the lookup of the global context
         allStringsInGlobalContext = Utilities.actionsGlobalContext().lookupResult(String.class);
+        // register to the lookup if he AnagramEditorTopComponent
+        allStringsInGlobalContext = WindowManager.getDefault().findTopComponent("AnagramEditorTopComponent").getLookup().lookupResult(String.class);
+        
         allStringsInGlobalContext.addLookupListener(this);
     }
 
