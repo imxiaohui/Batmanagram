@@ -245,12 +245,14 @@ public final class AnagramEditorTopComponent extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void guessButtonguessedWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guessButtonguessedWordActionPerformed
+        
+        // enable save capability
+        ic.add(gwsc);
+        ic.add(guessedWord.getText());
+        
         if (wordLibrary.isCorrect(wordIdx, guessedWord.getText())){
             feedbackLabel.setText("Correct! Try a new word!");
             getRootPane().setDefaultButton(nextTrial);
-            
-            // enable save capability
-            ic.add(gwsc);
         } else {
             feedbackLabel.setText("Incorrect! Try again!");
             guessedWord.setText("");
