@@ -5,15 +5,20 @@
 package com.toy.anagram.core;
 
 import com.toy.anagrams.api.WordLibrary;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.ServiceLoader;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.cookies.SaveCookie;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  * Top component which displays something.
@@ -41,12 +46,29 @@ public final class AnagramEditorTopComponent extends TopComponent {
     
     private int wordIdx = 0;
     private WordLibrary wordLibrary;
+    
+    InstanceContent ic = new InstanceContent();
+    
+    private GuessedWordSaveCapability gwsc = new GuessedWordSaveCapability();
+    
+    private class GuessedWordSaveCapability implements SaveCookie {
+        @Override
+        public void save() throws IOException {
+            // save data
+            String wordToBeSaved = guessedWord.getText();
+            JOptionPane.showMessageDialog(null, "saving " + wordToBeSaved + " ...");
+            
+            // disable save action
+            ic.remove(gwsc);
+        }
+    }
 
     public AnagramEditorTopComponent() {
         initComponents();
         setName(Bundle.CTL_AnagramEditorTopComponent());
         setToolTipText(Bundle.HINT_AnagramEditorTopComponent());
-        
+         
+        // set model for WordLibrary
         DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
         Collection<? extends WordLibrary> allRegisteredWordLibraries = Lookup.getDefault().lookupAll(WordLibrary.class);
         for (WordLibrary wordLibrary1 : allRegisteredWordLibraries) {
@@ -54,7 +76,8 @@ public final class AnagramEditorTopComponent extends TopComponent {
         }
         jComboBox1.setModel(dcbm);
         
-        
+        // access the registry (i.e., the lookup) of this TopComponent
+        associateLookup(new AbstractLookup(ic));
     }
 
     /**
@@ -231,6 +254,9 @@ public final class AnagramEditorTopComponent extends TopComponent {
         }
 
         guessedWord.requestFocusInWindow();
+        
+        // enable save capability
+        ic.add(gwsc);
     }//GEN-LAST:event_guessButtonguessedWordActionPerformed
 
     private void nextTrialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextTrialActionPerformed
